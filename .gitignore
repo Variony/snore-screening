@@ -1,0 +1,16 @@
+# Local recordings and exported audio
+*.aac
+*.aif
+*.aiff
+*.flac
+*.m4a
+*.mp3
+*.ogg
+*.opus
+*.wav
+*.zip
+
+# Local Python and macOS files
+__pycache__/
+*.py[cod]
+.DS_Store

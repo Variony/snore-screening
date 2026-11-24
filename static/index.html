@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Snore Screening</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <div class="hero-top">
+        <div class="eyebrow" data-i18n="eyebrow">LOCAL · STREAMING SCAN</div>
+        <button id="language-toggle" class="language-toggle" type="button" aria-label="Switch language">中文</button>
+      </div>
+      <h1 data-i18n="appTitle">Snore Screening</h1>
+      <p data-i18n="intro">Find possible sudden increases in snoring or breathing volume and preview them. This screens loudness only; it does not identify sound sources.</p>
+    </header>
+
+    <section class="panel">
+      <label class="file-picker" for="audio-file">
+        <span class="upload-mark" aria-hidden="true">↑</span>
+        <span class="file-title" data-i18n="chooseFile">Choose an audio file</span>
+        <span class="file-subtitle" data-i18n="supportedFormats">WAV supported; install FFmpeg for MP3, M4A, AAC, FLAC, OGG, and more</span>
+      </label>
+      <input id="audio-file" type="file" accept="audio/*,.wav,.mp3,.m4a,.aac,.flac,.ogg,.aiff,.aif">
+      <div id="selected-file" class="selected-file" hidden></div>
+
+      <div class="settings">
+        <label>
+          <span data-i18n="minimumPeak">Minimum peak</span>
+          <span class="input-wrap"><input id="min-peak" type="number" value="-28" min="-60" max="0" step="1"><span>dBFS</span></span>
+          <small data-i18n="minimumPeakHint">Lower values may catch quieter snores but increase false positives</small>
+        </label>
+        <label>
+          <span data-i18n="riseAboveBackground">Rise above background</span>
+          <span class="input-wrap"><input id="rise" type="number" value="6" min="0" max="40" step="1"><span>dB</span></span>
+          <small data-i18n="riseHint">Minimum increase compared with recent background</small>
+        </label>
+        <label>
+          <span data-i18n="windowSize">Window size</span>
+          <span class="input-wrap"><input id="window" type="number" value="250" min="50" max="1000" step="50"><span>ms</span></span>
+          <small data-i18n="windowHint">Suitable for changes lasting a few hundred milliseconds</small>
+        </label>
+      </div>
+
+      <button id="analyze" class="primary" disabled data-i18n="startScan">Start scan</button>
+      <div id="progress-area" class="progress-area" hidden>
+        <div class="progress-copy"><span id="status" data-i18n="ready">Ready</span><span id="percent"></span></div>
+        <progress id="progress" max="100" value="0"></progress>
+      </div>
+      <p class="privacy" data-i18n="privacy">The file is sent only to this computer for analysis. Its temporary copy is deleted afterward. The original is not modified or uploaded to the internet.</p>
+      <p id="error" class="error" role="alert" hidden></p>
+    </section>
+
+    <section id="results" class="panel results" hidden>
+      <div class="results-heading">
+        <div>
+          <div class="eyebrow" data-i18n="scanResults">SCAN RESULTS</div>
+          <h2 id="summary">Found 0 candidates</h2>
+        </div>
+        <div id="duration" class="duration"></div>
+        <button id="download-results" class="secondary" type="button" disabled data-i18n="downloadAudioZip">Download candidate audio ZIP</button>
+      </div>
+      <p class="result-hint" data-i18n="resultHint">Select a row to play from about 3 seconds before the event. These are loudness-spike candidates and may include other sounds.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th data-i18n="time">Time</th><th data-i18n="duration">Duration</th><th data-i18n="peak">Peak</th><th data-i18n="rise">Rise</th><th data-i18n="preview">Preview</th></tr></thead>
+          <tbody id="findings"></tbody>
+        </table>
+        <p id="no-findings" class="empty" hidden data-i18n="noFindings">No loudness spikes matched these settings. Try lowering the peak or rise threshold.</p>
+      </div>
+      <audio id="player" controls preload="metadata" aria-label="Audio player" data-i18n-aria="playerLabel"></audio>
+      <p class="disclaimer" data-i18n="disclaimer">This tool is for reviewing audio only, not for medical advice or diagnosis. Results depend on recording levels and selected thresholds.</p>
+    </section>
+    <footer data-i18n="footer">Snore Screening · Runs only on this computer</footer>
+  </main>
+</body>
+</html>

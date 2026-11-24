@@ -36,7 +36,7 @@ Files up to 4 GiB are supported. Audio is processed incrementally rather than lo
 
 ## Privacy and intended use
 
-Audio stays on this computer and is not sent to an external service. Snore Screening is for reviewing audio only; it does not provide medical advice or diagnosis. The repository does not include recordings or exported audio.
+Audio stays on this computer and is not sent to an external service. Snore Screening is not a medical device and must not be used to diagnose, prevent, or treat any condition. It only highlights changes in sound level; use the results for personal reference, not as medical advice or a substitute for professional evaluation. The repository does not include recordings or exported audio.
 
 ## Tests
 

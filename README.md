@@ -1,47 +1,45 @@
-# 呼噜筛查
+# Snore Screening
 
 **Version 1.0**
 
-一个仅在本机运行的网页应用，用于筛查录音中可能突然变响的呼噜/呼吸声片段。它只按响度变化筛查，不识别声源。录音会通过本机回环地址发送给 Python 服务，服务以临时文件接收，并逐块读取；分析结束后自动删除临时副本。它不会访问互联网或修改原始录音。
+Snore Screening is a local web app for finding audio regions with sudden loudness increases in long recordings. It flags loudness changes for review; it does not identify sound sources. Audio is handled locally through the loopback interface and processed incrementally from a temporary file. The app does not upload recordings to external services or modify the original files.
 
-## 启动
+## Run
 
-需要 macOS 自带或已安装的 Python 3。双击 `run.command`，或在终端运行：
+Python 3 is required. On macOS, double-click `run.command`, or start the app from a terminal:
 
 ```sh
 python3 server.py
 ```
 
-应用会在浏览器打开 <http://127.0.0.1:8765>。关闭启动应用的终端窗口即可停止服务。
-界面默认英文，可通过右上角按钮切换中文；扫描 ZIP 报告使用扫描时所选的语言。
+The app opens in your browser at <http://127.0.0.1:8765>. Close the terminal window running the server to stop it. The interface defaults to English; use the language button in the upper-right corner to switch to Chinese. ZIP reports use the language selected when the scan starts.
 
-不压缩的 PCM WAV 可以直接分析。MP3、M4A、AAC、FLAC、OGG 等格式需要 FFmpeg。可任选一种安装方式：
+Uncompressed PCM WAV files can be analyzed directly. Other common formats, including MP3, M4A, AAC, FLAC, and OGG, require FFmpeg. Install it with Homebrew:
 
 ```sh
 brew install ffmpeg
 ```
 
-或使用 Python 包提供的 FFmpeg：
+Alternatively, install the Python package that provides FFmpeg:
 
 ```sh
 python3 -m pip install -r requirements.txt
 ```
 
-扫描完成后可下载 ZIP，其中包含 CSV 候选时间表、JSON 扫描摘要，以及每个候选点前约 3 秒、后约 1.5 秒的 M4A 音频片段。候选片段在扫描期间生成，因此较长录音的打包进度也会显示在页面上。
+## Scanning and results
 
-上传限制为 4 GiB，扫描时不会把整段音频载入内存。服务会在系统临时目录暂存上传内容，因此需要足够的可用磁盘空间；音频临时副本会在分析后清理，候选 ZIP 最多保留一小时供下载，并会在下一次扫描或过期下载请求时清理。
-页面会分别显示文件上传进度，以及按已扫描音频时长计算的分析进度。
+The default settings use 250 ms windows and flag candidates whose peak reaches at least -28 dBFS and whose peak or RMS is at least 6 dB above recent background. Lower thresholds can find quieter events but may increase false positives. Results are loudness candidates, not confirmed snores; listen to the clips to review them.
 
-## 检测说明
+The results ZIP contains a CSV candidate list, a JSON scan summary, and an M4A clip for each candidate. Clips include approximately 3 seconds before and 1.5 seconds after each event. Upload and scan progress are shown in the interface.
 
-默认按 250 毫秒窗口做较敏感的鼾声/呼吸声响度候选筛查：窗口峰值至少达到 -28 dBFS，且窗口峰值或 RMS 比近期背景至少高 6 dB。调低门槛会增加误报。应用只检测响度突增，不识别声源；结果需要试听确认。dBFS 越接近 0，数字音频电平越高。
+Files up to 4 GiB are supported. Audio is processed incrementally rather than loaded into memory in full. The app temporarily stores the uploaded copy on the local system, so ensure enough disk space is available. Temporary audio is removed after analysis; result ZIPs are kept for up to one hour.
 
-本工具仅用于声音片段回顾，不提供医疗建议或诊断。
+## Privacy and intended use
 
-## 测试
+Audio stays on this computer and is not sent to an external service. Snore Screening is for reviewing audio only; it does not provide medical advice or diagnosis. The repository does not include recordings or exported audio.
+
+## Tests
 
 ```sh
 python3 -m unittest discover -s tests
 ```
-
-本项目仓库不包含录音或导出的音频文件。

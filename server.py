@@ -221,7 +221,7 @@ def create_audio_results_archive(document, audio_path, archive_path, progress_ca
 
 
 class RequestHandler(BaseHTTPRequestHandler):
-    server_version = "AudioSpikeAnalyzer/1.0"
+    server_version = "SnoreScreening/1.0"
 
     def end_headers(self):
         self.send_header("X-Content-Type-Options", "nosniff")
